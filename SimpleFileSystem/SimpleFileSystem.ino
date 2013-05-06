@@ -17,8 +17,8 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include "DriverSPIMC23x256.h"
-#include "DriverI2CMC24LCxxx.h"
+#include "DRIVERSPIMC23X256.h"
+#include "DRIVERI2CMC24LCXXX.h"
 
 #define INCLUDE_TEST_CHIP true
 
