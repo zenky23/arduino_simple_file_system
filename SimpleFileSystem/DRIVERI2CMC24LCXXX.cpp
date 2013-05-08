@@ -222,6 +222,7 @@ bool DriverI2CMC24LCxxx::testChip() {
     // Erase whole chip
     if (DEBUG) {
         Serial.println("DriverI2CMC24LCxxx::testChip: Erasing whole of storage");
+        Serial.println(millis());
     }
     status = erase();
     if (!status) {
@@ -234,6 +235,7 @@ bool DriverI2CMC24LCxxx::testChip() {
     // Verify chip is still erased
     if (DEBUG) {
         Serial.println("DriverI2CMC24LCxxx::testChip: Verifying erase took");
+        Serial.println(millis());
     }
 
     currentPage = 0;
@@ -259,6 +261,7 @@ bool DriverI2CMC24LCxxx::testChip() {
     // Write 0x79 to chip
     if (DEBUG) {
         Serial.println("DriverI2CMC24LCxxx::testChip: Writing 0x79 to whole of chip");
+        Serial.println(millis());
     }
     currentPage = 0;
     for (uint8_t i=0; i<_pageSize; i++) {
@@ -278,6 +281,7 @@ bool DriverI2CMC24LCxxx::testChip() {
     // Verify values are still 0x79
     if (DEBUG) {
         Serial.println("DriverI2CMC24LCxxx::testChip: Verifying 0x79 took");
+        Serial.println(millis());
     }
 
     currentPage = 0;
@@ -303,6 +307,7 @@ bool DriverI2CMC24LCxxx::testChip() {
     // Erase whole chip
     if (DEBUG) {
         Serial.println("DriverI2CMC24LCxxx::testChip: Erasing whole of storage");
+        Serial.println(millis());
     }
     status = erase();
     if (!status) {
@@ -315,6 +320,7 @@ bool DriverI2CMC24LCxxx::testChip() {
     // Verify chip is still erased
     if (DEBUG) {
         Serial.println("DriverI2CMC24LCxxx::testChip: Verifying erase took");
+        Serial.println(millis());
     }
 
     currentPage = 0;

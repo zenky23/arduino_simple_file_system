@@ -32,7 +32,10 @@ void setup() {
   // I2C EEPROM device test
   Serial.println("Testing DriverI2CMC24LCxxx");
   DriverI2CMC24LCxxx* eeprom = new DriverI2CMC24LCxxx(0, I2CMC24LCXXX_PAGE256);
-  eeprom->testChip();
+  bool mc24lcxxxTest = eeprom->testChip();
+  if (!mc24lcxxxTest) {
+    Serial.println("Failed!");
+  }
 }
 
 void loop() {
