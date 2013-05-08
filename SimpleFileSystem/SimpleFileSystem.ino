@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-#include <SPI.h>
 #include <Wire.h>
 
 #include "DRIVERSPIMC23X256.h"
@@ -27,21 +26,9 @@ void setup() {
   Serial.begin(9600);
   while (!Serial); // Wait for serial to open before doing anything further
 
-  // Start SPI for drivers that require it
-  Serial.println("Starting SPI bus");
-  SPI.begin();
-  SPI.setBitOrder(MSBFIRST);
-  SPI.setDataMode(SPI_MODE0);
-  //SPI.setClockDivider(SPI_CLOCK_DIV2);
-
   // Start I2C for drivers that require it
   Serial.println("Starting I2C bus");
   Wire.begin();
-
-  // SRAM SPI device test
-  Serial.println("Testing DriverSPIMC23x256");
-  DriverSPIMC23x256* sram = new DriverSPIMC23x256(8);
-  sram->testChip();
 
   // I2C EEPROM device test
   Serial.println("Testing DriverI2CMC24LCxxx");
