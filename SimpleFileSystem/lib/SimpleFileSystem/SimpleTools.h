@@ -14,10 +14,10 @@
  limitations under the License.
  */
 
-#ifndef TINYTOOLS_H
-#define TINYTOOLS_H
+#ifndef SIMPLETOOLS_H
+#define SIMPLETOOLS_H
 
-class TinyTools {
+class SimpleTools {
 public:
 	static int GetNumberDigits(long number);
 };

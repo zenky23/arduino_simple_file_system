@@ -14,13 +14,13 @@
  limitations under the License.
  */
 
-// Define TinyFileSystem Variables
+// Define SimpleFileSystem Variables
 #define EEPROMSize 1024		// The size of EEPROM in bytes
 #define MaxFilenameSize 16  // The maximum length of a filename
 #define MaxFiles 5			// How many files can a user write
 
-#include <TinyFileSystem.h>
-#include <TinyFile.h>
+#include <SimpleFileSystem.h>
+#include <SimpleFile.h>
 
 #include <EEPROM.h>
 
@@ -30,21 +30,21 @@ void setup() {
 	while (!Serial);
 
 	// Erase EEPROM
-	TinyFileSystem::EraseEEPROM();
+	SimpleFileSystem::EraseEEPROM();
 	
 	// Create new file
-	TinyFile myFile("File1");
+	SimpleFile myFile("File1");
 	myFile.Save("File1 Data");
 
-	TinyFile myFile2("File2");
+	SimpleFile myFile2("File2");
 	myFile2.Save("File2 Data");
 
-	TinyFile myFile3("File3");
+	SimpleFile myFile3("File3");
 	myFile3.Save("File 3 Data");
 	
 	// Load a file
-	TinyFile fileToLoad;
-	if(TinyFileSystem::FileExists("File2")) {
+	SimpleFile fileToLoad;
+	if(SimpleFileSystem::FileExists("File2")) {
 		String data = fileToLoad.Load("File2");
 		Serial.println("Previus data: " + data);
 

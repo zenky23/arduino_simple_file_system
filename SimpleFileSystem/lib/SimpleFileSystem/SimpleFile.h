@@ -14,12 +14,12 @@
  limitations under the License.
  */
 
-#ifndef TinyFile_h
-#define TinyFile_h
+#ifndef SimpleFile_h
+#define SimpleFile_h
 
-#include "TinyFileSystem.h"
+#include "SimpleFileSystem.h"
 
-class TinyFile  {
+class SimpleFile  {
 private:
 	String fName;
 	String fData;
@@ -30,8 +30,8 @@ private:
 	void SaveFileIndex(String fileIndexData);
 
 public:
-	TinyFile();
-	TinyFile(String filename);	
+	SimpleFile();
+	SimpleFile(String filename);	
 	void Save(String data);
 	String Load(String filename);
 };

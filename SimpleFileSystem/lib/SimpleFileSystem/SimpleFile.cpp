@@ -17,24 +17,24 @@
 #include <Arduino.h>
 #include <avr/eeprom.h>
 
-#include "TinyFile.h"
-#include "TinyTools.h"
+#include "SimpleFile.h"
+#include "SimpleTools.h"
 
 // Constructor
-TinyFile::TinyFile() {
+SimpleFile::SimpleFile() {
 	Serial.print("Start of data address:");
-	Serial.println(TinyFileSystem::GetStartOfDataAddress());
+	Serial.println(SimpleFileSystem::GetStartOfDataAddress());
 }
 
 // Constructor
 // filename is the name of the new file
-TinyFile::TinyFile(String fileName) {
-	TinyFile();
+SimpleFile::SimpleFile(String fileName) {
+	SimpleFile();
 	fName = FixFileName(fileName);
 }
 
 // Fix file name
-String TinyFile::FixFileName(String filename) {
+String SimpleFile::FixFileName(String filename) {
 	int i;
 	if (filename.length() < MaxFilenameSize) {
 		for (i = filename.length(); i < MaxFilenameSize; i ++) {
@@ -49,14 +49,14 @@ String TinyFile::FixFileName(String filename) {
 }
 
 // Save the file to EEPROM
-void TinyFile::Save(String data) {
+void SimpleFile::Save(String data) {
 	fData = data;
-	bool fileExists = TinyFileSystem::FileExists(fName);
-	int maximumAddressLength = TinyTools::GetNumberDigits(TinyFileSystem::GetEEPROMSize());
+	bool fileExists = SimpleFileSystem::FileExists(fName);
+	int maximumAddressLength = SimpleTools::GetNumberDigits(SimpleFileSystem::GetEEPROMSize());
 	long i;
 
 	if (fileExists) { // File exists Update file
-		long * fileAddress = TinyFileSystem::GetFileAddress(fName);
+		long * fileAddress = SimpleFileSystem::GetFileAddress(fName);
 		long addressStartIndex = fileAddress[0];
 		long addressEndIndex = fileAddress[1];
 
@@ -79,15 +79,15 @@ void TinyFile::Save(String data) {
 			Serial.println("New data are smaller");
 			// Write the file
 			for (i = addressStartIndex+ dataDifference; i < addressEndIndex; i++) {
-				TinyFileSystem::WriteToEEPROM(i, fData.charAt(i));
+				SimpleFileSystem::WriteToEEPROM(i, fData.charAt(i));
 			}
 		}
 	}
 	else { // Create new file
 		// Find free space to save the new file
 		long positionToStartWriting = -1;
-		for (i = EEPROMSize - 1; i > TinyFileSystem::GetStartOfDataAddress(); i--) {
-			if (TinyFileSystem::ReadFromEEPROM(i) == 0) {
+		for (i = EEPROMSize - 1; i > SimpleFileSystem::GetStartOfDataAddress(); i--) {
+			if (SimpleFileSystem::ReadFromEEPROM(i) == 0) {
 				positionToStartWriting = i;
 				break;
 			}
@@ -98,7 +98,7 @@ void TinyFile::Save(String data) {
 			fAddressEndIndex = fAddressStartIndex + fData.length()-1;			// End of data EEPROM address
 		
 			for (i = 0; i< fData.length(); i++) {								// Write data to EEPROM
-				TinyFileSystem::WriteToEEPROM(fAddressStartIndex+i, fData.charAt(i));
+				SimpleFileSystem::WriteToEEPROM(fAddressStartIndex+i, fData.charAt(i));
 			}
 
 			// Create file index data
@@ -128,15 +128,15 @@ void TinyFile::Save(String data) {
 	}
 }
 
-void TinyFile::SaveFileIndex(String fileIndexData) {
+void SimpleFile::SaveFileIndex(String fileIndexData) {
 	int i;
-	int maximumAddressLength = TinyTools::GetNumberDigits(TinyFileSystem::GetEEPROMSize());
+	int maximumAddressLength = SimpleTools::GetNumberDigits(SimpleFileSystem::GetEEPROMSize());
 	
 	// Find last file index from the begining of EEPROM
 	// and then write the new file index
 	int positionToStartWriting = -1;
-	for (i = 0; i < TinyFileSystem::GetStartOfDataAddress(); i += MaxFilenameSize + 1 + (2 * maximumAddressLength)) {
-		if (TinyFileSystem::ReadFromEEPROM(i) == 0) {
+	for (i = 0; i < SimpleFileSystem::GetStartOfDataAddress(); i += MaxFilenameSize + 1 + (2 * maximumAddressLength)) {
+		if (SimpleFileSystem::ReadFromEEPROM(i) == 0) {
 			positionToStartWriting = i;
 			break;
 		}
@@ -144,29 +144,29 @@ void TinyFile::SaveFileIndex(String fileIndexData) {
 
 	if (positionToStartWriting>-1) {
 		for (i=0; i <fileIndexData.length(); i ++) {
-			TinyFileSystem::WriteToEEPROM(positionToStartWriting + i , fileIndexData.charAt(i));
+			SimpleFileSystem::WriteToEEPROM(positionToStartWriting + i , fileIndexData.charAt(i));
 		}
 	}
 }
 
 // Load a new file
-String TinyFile::Load(String filename) {
+String SimpleFile::Load(String filename) {
 	fName = filename;
 	filename = FixFileName(filename);
 	
 	int i;
-	int maximumAddressLength = TinyTools::GetNumberDigits(TinyFileSystem::GetEEPROMSize());
+	int maximumAddressLength = SimpleTools::GetNumberDigits(SimpleFileSystem::GetEEPROMSize());
 
 
 	// Check if file exists
-	for (i = 0; i < TinyFileSystem::GetStartOfDataAddress(); i += MaxFilenameSize + 1 + (2 * maximumAddressLength)) {
-		String portionToCheck = TinyFileSystem::ReadStringBlockFromEEPROM(i, i + MaxFilenameSize + 1 + (2 * maximumAddressLength));
+	for (i = 0; i < SimpleFileSystem::GetStartOfDataAddress(); i += MaxFilenameSize + 1 + (2 * maximumAddressLength)) {
+		String portionToCheck = SimpleFileSystem::ReadStringBlockFromEEPROM(i, i + MaxFilenameSize + 1 + (2 * maximumAddressLength));
 		
 		if (portionToCheck.startsWith(filename)) { // File found
 			String startIndexStr = portionToCheck.substring(MaxFilenameSize, MaxFilenameSize + maximumAddressLength);
 			String endIndexStr = portionToCheck.substring(MaxFilenameSize + maximumAddressLength, MaxFilenameSize + 2 * maximumAddressLength);
 			
-			return TinyFileSystem::ReadStringBlockFromEEPROM(startIndexStr.toInt(), endIndexStr.toInt());
+			return SimpleFileSystem::ReadStringBlockFromEEPROM(startIndexStr.toInt(), endIndexStr.toInt());
 		}
 	}
 

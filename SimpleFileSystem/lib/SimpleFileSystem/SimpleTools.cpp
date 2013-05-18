@@ -14,9 +14,9 @@
  limitations under the License.
  */
 
-#include "TinyTools.h"
+#include "SimpleTools.h"
 
-int TinyTools::GetNumberDigits(long number)  {
+int SimpleTools::GetNumberDigits(long number)  {
 	int num_digits = 0;
 	if (number < 0)
 		number = -number;

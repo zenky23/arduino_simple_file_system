@@ -16,31 +16,31 @@
 
 #include <Arduino.h>
 #include <avr/eeprom.h>
-#include "TinyTools.h"
+#include "SimpleTools.h"
 
-#include "TinyFileSystem.h"
+#include "SimpleFileSystem.h"
 
-long TinyFileSystem::GetEEPROMSize() {
+long SimpleFileSystem::GetEEPROMSize() {
 	return EEPROMSize;
 }
 
 // This number indicates the address of the Start of the data storage
-long TinyFileSystem::GetStartOfDataAddress() {
-	int maximumAddressLength = TinyTools::GetNumberDigits(TinyFileSystem::GetEEPROMSize());
+long SimpleFileSystem::GetStartOfDataAddress() {
+	int maximumAddressLength = SimpleTools::GetNumberDigits(SimpleFileSystem::GetEEPROMSize());
 	return MaxFiles * (MaxFilenameSize + 1 + (2 * maximumAddressLength));
 }
 
 // Erases EEPROM
-void TinyFileSystem::EraseEEPROM() {
+void SimpleFileSystem::EraseEEPROM() {
 	for (int i = 0; i < EEPROMSize; i++) {
 		WriteToEEPROM(i, 0);
 	}
 }
 
 // Return's true if file exist
-bool TinyFileSystem::FileExists(String filename) {
+bool SimpleFileSystem::FileExists(String filename) {
 	int i;
-	int maximumAddressLength = TinyTools::GetNumberDigits(TinyFileSystem::GetEEPROMSize());
+	int maximumAddressLength = SimpleTools::GetNumberDigits(SimpleFileSystem::GetEEPROMSize());
 
 	// Check if file exists
 	for (i = 0; i < MaxFiles * (MaxFilenameSize + 1 + (2 * maximumAddressLength)); i += MaxFilenameSize + 1 + (2 * maximumAddressLength)) {
@@ -54,9 +54,9 @@ bool TinyFileSystem::FileExists(String filename) {
 }
 
 // Return's the start address of the file
-long* TinyFileSystem::GetFileAddress(String filename) {
+long* SimpleFileSystem::GetFileAddress(String filename) {
 	int i;
-	int maximumAddressLength = TinyTools::GetNumberDigits(TinyFileSystem::GetEEPROMSize());
+	int maximumAddressLength = SimpleTools::GetNumberDigits(SimpleFileSystem::GetEEPROMSize());
 	long* pointer;
 	long result[2];
 	pointer = result;
@@ -66,7 +66,7 @@ long* TinyFileSystem::GetFileAddress(String filename) {
 
 	// Find file
 	for (i = 0; i < MaxFiles * (MaxFilenameSize + 1 + (2 * maximumAddressLength)); i += MaxFilenameSize + 1 + (2 * maximumAddressLength)) {
-		String portionToCheck = TinyFileSystem::ReadStringBlockFromEEPROM(i, i + MaxFilenameSize + 1 + (2 * maximumAddressLength));
+		String portionToCheck = SimpleFileSystem::ReadStringBlockFromEEPROM(i, i + MaxFilenameSize + 1 + (2 * maximumAddressLength));
 	
 		if (portionToCheck.startsWith(filename)) // File found
 		{
@@ -81,11 +81,11 @@ long* TinyFileSystem::GetFileAddress(String filename) {
 }
 
 
-uint8_t TinyFileSystem::ReadFromEEPROM(int address) {
+uint8_t SimpleFileSystem::ReadFromEEPROM(int address) {
 	return eeprom_read_byte((unsigned char *) address);
 }
 
-String TinyFileSystem::ReadStringBlockFromEEPROM(int addressStart, int addressEnd) {
+String SimpleFileSystem::ReadStringBlockFromEEPROM(int addressStart, int addressEnd) {
 	String result ="";
 	for (int i=addressStart; i <=addressEnd; i++) {
 		result = result + String(char(ReadFromEEPROM(i)));
@@ -93,6 +93,6 @@ String TinyFileSystem::ReadStringBlockFromEEPROM(int addressStart, int addressEn
 	return result;
 }
 
-void TinyFileSystem::WriteToEEPROM(int address, uint8_t value) {
+void SimpleFileSystem::WriteToEEPROM(int address, uint8_t value) {
 	eeprom_write_byte((unsigned char *) address, value);
 }

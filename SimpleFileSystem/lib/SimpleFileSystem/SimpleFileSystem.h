@@ -14,8 +14,8 @@
  limitations under the License.
  */
 
-#ifndef TinyFileSystem_h
-#define TinyFileSystem_h
+#ifndef SimpleFileSystem_h
+#define SimpleFileSystem_h
 
 #ifndef EEPROMSize 
 #define EEPROMSize 1024			// The size of EEPROM in bytes
@@ -29,7 +29,7 @@
 #define MaxFiles 5				// How many files can a user write
 #endif
 
-class TinyFileSystem  {
+class SimpleFileSystem  {
 public:
 	static long GetEEPROMSize();
 	// This number indicates the address of the Start of the data storage
