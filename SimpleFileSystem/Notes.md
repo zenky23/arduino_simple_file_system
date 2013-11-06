@@ -1,3 +1,13 @@
+Hardware Focused Notes
+----------------------
+- Simpler design to prevent over using ram/storage on AVR and other 8 bit microcontrollers
+- Generally information is stored to an eeprom as a set of offsets with the layout being managed internal to a firmware
+- The storage is just a set of "chunks" (ie. files) for each item you need to store
+- There is generally an upper bound on what the hardware can handle and the chunks can be fixed sizes based on the upper bound
+- Metadata about chunks can be stored in a special chunk or at the head/tail of a given chunk
+
+CS Focused Notes
+----------------
 - Filesystem object / singleton
 - Drivers
 - Drivers do _NOT_ implement filesytem but have standard API
@@ -30,3 +40,9 @@
 - Drivers are objects with abstract class for API
 - File is a pointer and size passed as parameters to methods
 - FileIO methods are pure static, c style
+
+Pre-existing filestems that may be worth looking closer at
+----------------------------------------------------------
+- http://www.nohau.co.uk/Suppliers/HCC-Embedded/tiny.htm
+- http://ultra-embedded.com/?fat_filelib
+- http://freedos-32.sourceforge.net/lean/downloads.php
