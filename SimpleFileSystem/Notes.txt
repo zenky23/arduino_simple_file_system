@@ -1,0 +1,32 @@
+- Filesystem object / singleton
+- Drivers
+- Drivers do _NOT_ implement filesytem but have standard API
+- Single filesystem per chip
+	- Possibly multiple chips per filesystem (long-term)
+- 2 byte identifier instead of filename which gives 65k files per filesystem
+- Filenames would be a map stored as it's own file on the filesystem
+- Implement seek and partial reads/writes long-term
+- Files are variable sized compared to each other
+- Use FAT (file allocation table) with fixed size
+- Fixed fat size is proportinoal to total storage size
+	- Percentage based
+	- Logarithmic scale
+	- Keep two byte id for files -> gives practical upper bound
+- Use 1 byte file identifier for extremely small storage chips (<=32k)
+- Use 2 byte file identifier for larger storage chips (>=64k)
+- Want / need dynamically sized files
+- Need inode implementation for dynamically sized files
+- FAT stores
+	- file id
+	- file size
+	- inode #
+- Inodes are files in the filesystem and allocated as such
+- Inode stores vector / list of block addresses / locations and size
+	- Store blocks list in order
+- 3 bytes per inode entry
+	- 2 bytes for block address
+	- 1 byte for # blocks stored
+- Filesystem singleton as pure static methods, c style
+- Drivers are objects with abstract class for API
+- File is a pointer and size passed as parameters to methods
+- FileIO methods are pure static, c style
