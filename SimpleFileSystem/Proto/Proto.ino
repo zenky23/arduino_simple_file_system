@@ -81,46 +81,71 @@ void setup(void) {
 
 // Variables used during testing
 uint8_t modeOfOperation;
+uint8_t counter1;
+uint8_t byteRead;
 
 void loop() {
   Serial.println("Running tests");
   Serial.println("#############");
   
-  Serial.println("Testing ability to set differnet modes of operation");
+  Serial.println("Running mode set tests");
   
   // Get current mode of operation
-  Serial.print("Current mode: ");
+  Serial.print("    Current mode: ");
   Serial.println(SpiRAMReadStsReg(), BIN);
   
   // Set page mode
-  Serial.print("Setting page mode (");
+  Serial.print("    Setting page mode (");
   Serial.print(MODE_PAGE, BIN);
   Serial.println(")");
   SpiRAMWriteStsReg(MODE_PAGE);
   modeOfOperation = SpiRAMReadStsReg();
-  Serial.print("Current mode: ");
+  Serial.print("    Current mode: ");
   Serial.println(modeOfOperation, BIN);
   // Verify mode was set correctly (assert)
   if (modeOfOperation != MODE_PAGE) {
-    Serial.println("Mode set failed!");
-    Serial.read();
+    Serial.println("    Mode set failed!");
   }
   
   // Set byte mode
-  Serial.print("Setting byte mode (");
+  Serial.print("    Setting byte mode (");
   Serial.print(MODE_BYTE, BIN);
   Serial.println(")");
   SpiRAMWriteStsReg(MODE_BYTE);
   modeOfOperation = SpiRAMReadStsReg();
-  Serial.print("Current mode: ");
+  Serial.print("    Current mode: ");
   Serial.println(modeOfOperation, BIN);
   // Verify mode was set correctly (assert)
   if (modeOfOperation != MODE_BYTE) {
-    Serial.println("Mode set failed!");
-    Serial.read();
+    Serial.println("    Mode set failed!");
   }
   
+  Serial.println("Running sequential mode tests");
   
+  Serial.println("    Byte mode Write/Reads");
+  Serial.println("    Writing 0 - 255 verifying each write with a read immediately following");
+  SpiRAMWriteStsReg(MODE_BYTE); // Ensure we are in the proper mode
+  counter1 = 0; // Set counter start
+  Serial.print("    "); // Proper indentation for status line
+  // Read/write each of the 32768 addresses
+  for (uint16_t i; i<32768; i++) {
+    SpiRAMWrite8(i, counter1); // Write a byte
+    byteRead = SpiRAMRead8(i); // Read it for verification
+    if (counter1 != byteRead) { // Verify written byte
+      Serial.println("    Invalid read or write!");
+    }
+    if (i % 1024 == 0) { // Print status ever 1024 iterations to prevent console spew
+      Serial.print("#");
+    }
+    // Resent counter at 255 (could just let the uint8_t overflow, but...)
+    if (counter1 == 255) {
+      counter1 = 0;
+    }
+    else {
+      counter1++;
+    }
+  }
+  Serial.println(); // Append new line after #'s indicating status
   
   // Delay before re-running tests
   delay(1000);
