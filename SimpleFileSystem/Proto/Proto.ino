@@ -77,7 +77,17 @@ void setup(void) {
   
   // Let SRAM settle -- just in case
   delay(10);
+}
 
+// Variables used during testing
+uint8_t modeOfOperation;
+
+void loop() {
+  Serial.println("Running tests");
+  Serial.println("#############");
+  
+  Serial.println("Testing ability to set differnet modes of operation");
+  
   // Get current mode of operation
   Serial.print("Current mode: ");
   Serial.println(SpiRAMReadStsReg(), BIN);
@@ -87,30 +97,32 @@ void setup(void) {
   Serial.print(MODE_PAGE, BIN);
   Serial.println(")");
   SpiRAMWriteStsReg(MODE_PAGE);
+  modeOfOperation = SpiRAMReadStsReg();
   Serial.print("Current mode: ");
-  Serial.println(SpiRAMReadStsReg(), BIN);
+  Serial.println(modeOfOperation, BIN);
+  // Verify mode was set correctly (assert)
+  if (modeOfOperation != MODE_PAGE) {
+    Serial.println("Mode set failed!");
+    Serial.read();
+  }
   
   // Set byte mode
   Serial.print("Setting byte mode (");
   Serial.print(MODE_BYTE, BIN);
   Serial.println(")");
   SpiRAMWriteStsReg(MODE_BYTE);
+  modeOfOperation = SpiRAMReadStsReg();
   Serial.print("Current mode: ");
-  Serial.println(SpiRAMReadStsReg(), BIN);
-
-  /*int dataByte = 255;
-  for (uint16_t addr=0; addr<32; addr++) {
-    Serial.print("Write: ");
-    SpiRAMWrite8(addr, (uint8_t)dataByte);
-    dataByte--;
-    Serial.print("Addr: ");
-    Serial.print(addr);
-    uint8_t i = SpiRAMRead8(addr);
-    Serial.print(" | Read: ");
-    Serial.println((uint16_t)i);
-  }*/
-}
-
-void loop() {
+  Serial.println(modeOfOperation, BIN);
+  // Verify mode was set correctly (assert)
+  if (modeOfOperation != MODE_BYTE) {
+    Serial.println("Mode set failed!");
+    Serial.read();
+  }
+  
+  
+  
+  // Delay before re-running tests
+  delay(1000);
 }
 
