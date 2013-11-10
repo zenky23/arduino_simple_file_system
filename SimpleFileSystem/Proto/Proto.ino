@@ -122,13 +122,38 @@ void loop() {
   
   Serial.println("Running sequential mode tests");
   
-  Serial.println("    Byte mode Write/Reads");
+  Serial.println("    Byte mode Write/Reads from address 0 -> 32768");
   Serial.println("    Writing 0 - 255 verifying each write with a read immediately following");
   SpiRAMWriteStsReg(MODE_BYTE); // Ensure we are in the proper mode
   counter1 = 0; // Set counter start
   Serial.print("    "); // Proper indentation for status line
   // Read/write each of the 32768 addresses
-  for (uint16_t i; i<32768; i++) {
+  for (uint16_t i=0; i<32768; i++) {
+    SpiRAMWrite8(i, counter1); // Write a byte
+    byteRead = SpiRAMRead8(i); // Read it for verification
+    if (counter1 != byteRead) { // Verify written byte
+      Serial.println("    Invalid read or write!");
+    }
+    if (i % 1024 == 0) { // Print status ever 1024 iterations to prevent console spew
+      Serial.print("#");
+    }
+    // Resent counter at 255 (could just let the uint8_t overflow, but...)
+    if (counter1 == 255) {
+      counter1 = 0;
+    }
+    else {
+      counter1++;
+    }
+  }
+  Serial.println(); // Append new line after #'s indicating status
+  
+  Serial.println("    Byte mode Write/Reads from address 32768 -> 0");
+  Serial.println("    Writing 0 - 255 verifying each write with a read immediately following");
+  SpiRAMWriteStsReg(MODE_BYTE); // Ensure we are in the proper mode
+  counter1 = 0; // Set counter start
+  Serial.print("    "); // Proper indentation for status line
+  // Read/write each of the 32768 addresses
+  for (uint16_t i=32768; i>=0 && i<=32768; i--) { // <=32768 is a guard for when i-- causes an underflow
     SpiRAMWrite8(i, counter1); // Write a byte
     byteRead = SpiRAMRead8(i); // Read it for verification
     if (counter1 != byteRead) { // Verify written byte
