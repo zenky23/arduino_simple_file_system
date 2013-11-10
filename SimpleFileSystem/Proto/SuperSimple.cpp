@@ -15,6 +15,9 @@
  */
 
 
+// Ensure this code isn't built as part of an arduino sketch
+#ifndef ARDUINO
+
 // Nuke below includes
 #include <stdint.h>
 #include <stdio.h>
@@ -146,3 +149,4 @@ int main(int argc, const char* argv[] ) {
 		printf("%d: sizeBytes: %d\n", i, aFile->sizeBytes);
 	}
 }
+#endif

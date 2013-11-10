@@ -1,3 +1,4 @@
+// Adapted from
 // http://ucexperiment.wordpress.com/2013/02/23/interfacing-microchip-23k256-32kb-sram-spi-memory-to-the-arduino/
 
 #include <SPI.h>
@@ -28,9 +29,9 @@ void setup(void) {
   uint16_t addr;
   uint8_t i;
  
-  Serial.begin(9600);
-  pinMode(4, INPUT_PULLUP); // Test from website
+  Serial.begin(57600);
   SPI.begin(4);
+  SPI.setClockDivider(4, 6); // 14mhz
   int dataByte = 255;
   for (addr=0; addr<32; addr++) {
     Serial.print("Write: ");
